@@ -22,6 +22,7 @@ func BuildRedirectURL(opEndpoint, opLocalID, claimedID, returnTo, realm string) 
 	values.Add("openid.ns", "http://specs.openid.net/auth/2.0")
 	values.Add("openid.mode", "checkid_setup")
 	values.Add("openid.return_to", returnTo)
+	setSregQueryValues(&values)
 
 	// 9.1.  Request Parameters
 	// "openid.claimed_id" and "openid.identity" SHALL be either both present or both absent.

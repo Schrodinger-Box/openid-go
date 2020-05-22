@@ -66,6 +66,12 @@ func (oid *OpenID) Verify(uri string, cache DiscoveryCache, nonceStore NonceStor
 // This entry consists of the fields without the "openid." prefix that the signature covers.
 // This list MUST contain at least "op_endpoint", "return_to" "response_nonce" and "assoc_handle",
 // and if present in the response, "claimed_id" and "identity".
+
+// OpenID Simple Registration Extension 1.0
+// 4. Response Format
+// The response's "openid.signed" field list MUST include the returned registration field names,
+// prefixed without the openid. prefix (e.g., sreg.nickname).
+
 func verifySignedFields(vals url.Values) error {
 	ok := map[string]bool{
 		"op_endpoint":    false,
@@ -74,6 +80,16 @@ func verifySignedFields(vals url.Values) error {
 		"assoc_handle":   false,
 		"claimed_id":     vals.Get("openid.claimed_id") == "",
 		"identity":       vals.Get("openid.identity") == "",
+
+		"sreg.nickname":  vals.Get("openid.sreg.nickname") == "",
+		"sreg.email":     vals.Get("openid.sreg.email") == "",
+		"sreg.fullname":  vals.Get("openid.sreg.fullname") == "",
+		"sreg.dob":       vals.Get("openid.sreg.dob") == "",
+		"sreg.gender":    vals.Get("openid.sreg.gender") == "",
+		"sreg.postcode":  vals.Get("openid.sreg.postcode") == "",
+		"sreg.country":   vals.Get("openid.sreg.country") == "",
+		"sreg.language":  vals.Get("openid.sreg.language") == "",
+		"sreg.timezone":  vals.Get("openid.sreg.timezone") == "",
 	}
 	signed := strings.Split(vals.Get("openid.signed"), ",")
 	for _, sf := range signed {
