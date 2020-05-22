@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/yohcop/openid-go"
+	"github.com/Schrodinger-Box/openid-go"
 	"html/template"
 	"log"
 	"net/http"

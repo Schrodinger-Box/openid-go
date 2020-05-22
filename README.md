@@ -3,9 +3,11 @@
 This is a consumer (Relying party) implementation of OpenId 2.0,
 written in Go.
 
-    go get -u github.com/yohcop/openid-go
+    go get -u github.com/Schrodinger-Box/openid-go
 
-[![Build Status](https://travis-ci.org/yohcop/openid-go.svg?branch=master)](https://travis-ci.org/yohcop/openid-go)
+This fork adds support of sreg (OpenID Simple Registration Extension), based on [its version 1.0 specification](https://openid.net/specs/openid-simple-registration-extension-1_0.html).
+
+[![Build Status](https://travis-ci.org/Schrodinger-Box/openid-go.svg?branch=master)](https://travis-ci.org/Schrodinger-Box/openid-go.svg?branch=master)
 
 ## Github
 
@@ -45,3 +47,16 @@ Here is a set of libraries I found on GitHub that could make using this library 
 - [Gacnt/sqlxid](https://github.com/Gacnt/sqlxid) "An SQLX Adapter for Nonce / Discovery Cache store"
 - [Gacnt/gormid](https://github.com/Gacnt/gormid) "Use GORM (Go Object Relational Mapping) to store OpenID DiscoveryCache / Nonce in a database"
 - [hectorj/mysqlOpenID](https://github.com/hectorj/mysqlOpenID) "MySQL OpenID is a package to replace the in memory storage of discoveryCache and nonceStore."
+
+## Sample Response
+
+openid.ns=http://specs.openid.net/auth/2.0&
+openid.assoc_handle=5ec79ff8861e3&
+openid.return_to=http://localhost:8080/callback/openid&
+openid.claimed_id=https://openid.nus.edu.sg/e0424725&
+openid.identity=https://openid.nus.edu.sg/e0424725&
+openid.op_endpoint=https://openid.nus.edu.sg/server/&
+openid.response_nonce=2020-05-22T09:48:40Z5ec79ff88fc20&
+openid.mode=id_res&
+openid.signed=ns,assoc_handle,return_to,claimed_id,identity,op_endpoint,response_nonce,mode,signed&
+openid.sig=Ku1P+jO9+dKKFiSLgWpB4vUXcyycel+lQRKZMmG9cfw=
