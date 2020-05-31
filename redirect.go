@@ -5,20 +5,27 @@ import (
 	"strings"
 )
 
-func RedirectURL(id, callbackURL, realm string) (string, error) {
-	return defaultInstance.RedirectURL(id, callbackURL, realm)
+func RedirectURL(id, callbackURL, realm string, associate ...bool) (string, error) {
+	return defaultInstance.RedirectURL(id, callbackURL, realm, associate...)
 }
 
-func (oid *OpenID) RedirectURL(id, callbackURL, realm string) (string, error) {
+func (oid *OpenID) RedirectURL(id, callbackURL, realm string, associate ...bool) (string, error) {
 	opEndpoint, opLocalID, claimedID, err := oid.Discover(id)
 	if err != nil {
 		return "", err
 	}
-	return BuildRedirectURL(opEndpoint, opLocalID, claimedID, callbackURL, realm)
+	return BuildRedirectURL(opEndpoint, opLocalID, claimedID, callbackURL, realm, associate...)
 }
 
-func BuildRedirectURL(opEndpoint, opLocalID, claimedID, returnTo, realm string) (string, error) {
+func BuildRedirectURL(opEndpoint, opLocalID, claimedID, returnTo, realm string, associate ...bool) (string, error) {
 	values := make(url.Values)
+	if len(associate) > 0 && associate[0] {
+		checkAssociation(opEndpoint)
+		values.Add("openid.assoc_handle", associationHandle)
+		if len(associate) > 1 {
+			doubleVerification = associate[1]
+		}
+	}
 	values.Add("openid.ns", "http://specs.openid.net/auth/2.0")
 	values.Add("openid.mode", "checkid_setup")
 	values.Add("openid.return_to", returnTo)

@@ -1,6 +1,7 @@
 package openid
 
 import (
+	"encoding/base64"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -32,9 +33,17 @@ func (oid *OpenID) Verify(uri string, cache DiscoveryCache, nonceStore NonceStor
 		return "", err
 	}
 
+	// TODO: when in stateless verification, op_endpoint is used before discovery record is verified
 	// - The signature on the assertion is valid (Section 11.4)
-	if err = verifySignature(uri, values, oid.urlGetter); err != nil {
-		return "", err
+	if values.Get("openid.assoc_handle") == associationHandle {
+		if err = verifyLocalSignature(values); err != nil {
+			return "", err
+		}
+	}
+	if doubleVerification || values.Get("openid.assoc_handle") != associationHandle {
+		if err = verifySignature(uri, values, oid.urlGetter); err != nil {
+			return "", err
+		}
 	}
 
 	// - The value of "openid.return_to" matches the URL of the current
@@ -217,6 +226,21 @@ func verifyNonce(vals url.Values, store NonceStore) error {
 	nonce := vals.Get("openid.response_nonce")
 	endpoint := vals.Get("openid.op_endpoint")
 	return store.Accept(endpoint, nonce)
+}
+
+func verifyLocalSignature(vals url.Values) error {
+	// 11.4.1.  Verifying with an Association
+	payload := ""
+	signed := strings.Split(vals.Get("openid.signed"), ",")
+	for _, val := range signed {
+		payload = payload  + val + ":" + vals.Get("openid." + val) + "\n"
+	}
+	sigLocal := hmacSign(payload)
+	if base64.StdEncoding.EncodeToString(sigLocal) == vals.Get("openid.sig") {
+		return nil
+	} else {
+		return errors.New("signature received does not match with the locally generated one")
+	}
 }
 
 func verifySignature(uri string, vals url.Values, getter httpGetter) error {
