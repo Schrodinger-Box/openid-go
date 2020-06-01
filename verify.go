@@ -90,15 +90,15 @@ func verifySignedFields(vals url.Values) error {
 		"claimed_id":     vals.Get("openid.claimed_id") == "",
 		"identity":       vals.Get("openid.identity") == "",
 
-		"sreg.nickname":  vals.Get("openid.sreg.nickname") == "",
-		"sreg.email":     vals.Get("openid.sreg.email") == "",
-		"sreg.fullname":  vals.Get("openid.sreg.fullname") == "",
-		"sreg.dob":       vals.Get("openid.sreg.dob") == "",
-		"sreg.gender":    vals.Get("openid.sreg.gender") == "",
-		"sreg.postcode":  vals.Get("openid.sreg.postcode") == "",
-		"sreg.country":   vals.Get("openid.sreg.country") == "",
-		"sreg.language":  vals.Get("openid.sreg.language") == "",
-		"sreg.timezone":  vals.Get("openid.sreg.timezone") == "",
+		"sreg.nickname": vals.Get("openid.sreg.nickname") == "",
+		"sreg.email":    vals.Get("openid.sreg.email") == "",
+		"sreg.fullname": vals.Get("openid.sreg.fullname") == "",
+		"sreg.dob":      vals.Get("openid.sreg.dob") == "",
+		"sreg.gender":   vals.Get("openid.sreg.gender") == "",
+		"sreg.postcode": vals.Get("openid.sreg.postcode") == "",
+		"sreg.country":  vals.Get("openid.sreg.country") == "",
+		"sreg.language": vals.Get("openid.sreg.language") == "",
+		"sreg.timezone": vals.Get("openid.sreg.timezone") == "",
 	}
 	signed := strings.Split(vals.Get("openid.signed"), ",")
 	for _, sf := range signed {
@@ -233,7 +233,7 @@ func verifyLocalSignature(vals url.Values) error {
 	payload := ""
 	signed := strings.Split(vals.Get("openid.signed"), ",")
 	for _, val := range signed {
-		payload = payload  + val + ":" + vals.Get("openid." + val) + "\n"
+		payload = payload + val + ":" + vals.Get("openid."+val) + "\n"
 	}
 	sigLocal := hmacSign(payload)
 	if base64.StdEncoding.EncodeToString(sigLocal) == vals.Get("openid.sig") {

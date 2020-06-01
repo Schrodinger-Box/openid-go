@@ -5,7 +5,7 @@ import (
 )
 
 type OpenID struct {
-	urlGetter httpGetter
+	urlGetter  httpGetter
 	sregFields map[string]bool
 }
 
