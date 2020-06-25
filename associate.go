@@ -25,6 +25,7 @@ import (
 	"log"
 	"math/big"
 	"net/url"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -101,6 +102,9 @@ func associateOp(opEndpoint string) {
 				associationKey[k] = encryptedKey[k] ^ secretHashed[k]
 			}
 			associationHandle = parameters["assoc_handle"]
+			// a 30-second allowance is given to avoid problems caused by network delay
+			expiresIn, _ := strconv.Atoi(parameters["expires_in"])
+			associationExpiresIn = time.Now().Unix() + int64(expiresIn) - 30
 			log.Println("OP associated: assoc_handle=" + associationHandle)
 		}
 	} else {
